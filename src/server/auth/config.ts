@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
 
 import { db } from "~/server/db";
 
@@ -32,6 +33,41 @@ declare module "next-auth" {
  */
 export const authConfig = {
   providers: [
+    Credentials({
+      credentials: {
+        email: {
+          type: "email",
+          label: "Email",
+          placeholder: "johndoe@gmail.com",
+        },
+        password: {
+          type: "password",
+          label: "Password",
+          placeholder: "*****",
+        },
+      },
+      authorize: async (credentials) => {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        console.log("Authorizing user with email:", credentials.email);
+
+        const user = await db.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          return null;
+        }
+
+        if (user.password !== credentials.password) {
+          return null;
+        }
+
+        return user;
+      },
+    }),
     GithubProvider,
     /**
      * ...add more providers here.
@@ -52,5 +88,8 @@ export const authConfig = {
         id: user.id,
       },
     }),
+  },
+  pages: {
+    signIn: "/",
   },
 } satisfies NextAuthConfig;

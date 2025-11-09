@@ -2,6 +2,7 @@ import { GalleryVerticalEnd } from "lucide-react"
 import Image from "next/image"
 import { LoginForm } from "./_components/login-form"
 import Link from "next/link"
+import { FaMoneyBill1Wave } from "react-icons/fa6"
 
 export default function LoginPage() {
   return (
@@ -10,7 +11,7 @@ export default function LoginPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <Link href="/" className="flex items-center gap-2 font-medium">
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
+              <FaMoneyBill1Wave className="size-4" />
             </div>
             ManageMooney.
           </Link>
