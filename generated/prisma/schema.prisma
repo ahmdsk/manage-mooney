@@ -15,6 +15,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TransactionType {
+  INCOME
+  EXPENSE
+  DEBT
+  RECEIVABLE
+}
+
 model Post {
   id        Int      @id @default(autoincrement())
   name      String
@@ -72,4 +79,14 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Transaction {
+  id              String          @id @default(cuid())
+  userId          String
+  amount          Float
+  transactionType TransactionType
+  description     String?
+  status          Boolean         @default(true)
+  createdAt       DateTime        @default(now())
 }
